@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:github.com)",
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\gabri\\\\OneDrive\\\\Desktop\\\\Unity - Projetos\\\\Teste\\\\clientes\\\\_modelo-cliente\\\\calendario-comercial\" -Recurse -Force)",
+      "Bash(Select-Object FullName, PSIsContainer)",
+      "Bash(Sort-Object FullName)",
+      "Bash(Format-List)",
+      "Read(//c/Users/gabri/OneDrive/Desktop/Unity - Projetos/Teste/clientes/_modelo-cliente/calendario-comercial/**)"
+    ]
+  }
+}
