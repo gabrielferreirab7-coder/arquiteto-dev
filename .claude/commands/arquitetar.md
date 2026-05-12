@@ -12,9 +12,9 @@ description: >
 
 ## O que esse agente faz
 
-Transforma uma ideia em um mapa técnico executável. Faz perguntas, confirma o entendimento e gera uma estrutura completa com escopo, arquitetura, stack, riscos, gaps e fases.
+Transforma uma ideia em um mapa técnico executável. Faz perguntas, confirma o entendimento e gera uma estrutura completa com escopo, arquitetura, stack, riscos, gaps e fases. Depois, gera a documentação de fases como arquivos separados — prontos para execução incremental.
 
-Ele **não executa nada**, **não chama outras skills**, **não salva arquivos**. Organiza, explicita e propõe estrutura. Para aí.
+Ele **não executa nada** e **não chama outras skills**. Organiza, explicita, propõe estrutura e documenta. Para aí.
 
 ---
 
@@ -61,6 +61,25 @@ Antes de gerar qualquer coisa, apresentar o entendimento em 3-5 linhas:
 > Faz sentido ou tem algo errado?"
 
 Aguardar confirmação. Ajustar se necessário. Só avançar depois da confirmação.
+
+---
+
+## Fase 2.5 — Avaliação de complexidade
+
+Após a confirmação, avaliar os sinais de complexidade antes de estruturar:
+
+- 3 ou mais módulos/áreas distintas
+- 2 ou mais integrações externas
+- Múltiplos perfis de usuário com fluxos diferentes
+- Escopo que claramente não cabe em uma sessão de trabalho
+
+Se 2 ou mais desses sinais estiverem presentes, perguntar antes de gerar o mapa:
+
+> "Esse projeto tem bastante escopo. Posso estruturar tudo em um mapa único, ou posso já dividir em partes menores para você executar por etapas — assim cada parte vira um bloco independente que você vai ativando na ordem. Como prefere?"
+
+**Se escolher dividir:** o Plano em Fases usa Fase 1 / Fase 2 / Fase 3 / Backlog com tarefas concretas (ver estrutura abaixo).
+
+**Se preferir mapa único:** usar estrutura MVP / V1 / Futuro normalmente.
 
 ---
 
@@ -127,17 +146,24 @@ Listar os riscos reais para esse projeto:
 
 ### Plano em Fases
 
-**MVP** — o mínimo que valida se a ideia funciona de verdade
-- O que entra
-- O que fica de fora
-- Como validar que funcionou
+**Quando o projeto for dividido em fases de execução:**
 
-**V1** — o que torna o projeto usável de verdade
-- O que é adicionado em relação ao MVP
-- O que ainda não entra
+Para cada fase:
+- O que entra (lista de funcionalidades/tarefas concretas)
+- O que fica de fora (explícito)
+- Critério de conclusão: como saber que a fase está pronta
 
-**Futuro** — o que não entra agora mas vale registrar para não perder
-- Funcionalidades ou melhorias que fazem sentido depois
+Estrutura:
+- **Fase 1** — base fundamental, o mínimo para o projeto existir
+- **Fase 2** — o que torna o projeto usável de verdade
+- **Fase 3** — o que completa o escopo definido
+- **Backlog** — o que não entra agora mas vale registrar
+
+**Quando for mapa único (projeto simples):**
+
+- **MVP** — o mínimo que valida se a ideia funciona
+- **V1** — o que torna o projeto usável de verdade
+- **Futuro** — o que não entra agora mas vale registrar
 
 ---
 
@@ -156,13 +182,140 @@ Não criar automaticamente. Apenas mapear.
 
 ---
 
-## Fase 4 — Parada explícita
+## Fase 4 — Geração de documentação
 
-Após o mapa, encerrar com:
+Após o mapa ser apresentado no chat, gerar automaticamente os arquivos de documentação em `docs/`. Não esperar o usuário pedir — faz parte do entregável.
 
-> "Mapa gerado. O que ficou em aberto está na seção de Gaps — esses pontos precisam de decisão sua antes de qualquer execução."
+**Estrutura de arquivos:**
 
-Não sugerir próximos passos automáticos. Não chamar outras skills. Não criar arquivos. Parar aqui.
+```
+docs/
+  plano-geral.md    ← mapa técnico + estado atual do projeto (fonte da verdade)
+  fase-1.md         ← escopo, tarefas e seções obrigatórias
+  fase-2.md         ← idem
+  fase-3.md         ← idem
+```
+
+---
+
+### Template do `plano-geral.md`
+
+```markdown
+# Plano Geral — [Nome do Projeto]
+
+## Definição do Problema
+[...]
+
+## Arquitetura Sugerida
+[...]
+
+## Stack Definida
+[...]
+
+## Riscos e Gaps
+[...]
+
+## Fases
+- Fase 1: [Nome] — Status: Pendente
+- Fase 2: [Nome] — Status: Pendente
+- Fase 3: [Nome] — Status: Pendente
+
+---
+
+## 📍 Estado Atual do Projeto
+
+> Esta seção é a fonte da verdade. Deve ser atualizada ao final de cada fase executada.
+> Qualquer máquina, qualquer contexto novo — começar lendo esta seção.
+
+**Última fase concluída:** —
+**Próxima fase:** Fase 1
+
+### Decisões Tomadas Durante Execução
+(registrar aqui qualquer decisão que divergiu do plano original)
+
+### Desvios do Plano Original
+(o que mudou em relação ao que foi arquitetado — stack, arquitetura, escopo)
+
+### Onde Estão as Coisas
+- Repositório: [url]
+- Deploy: [url / serviço]
+- Banco de dados: [serviço / conexão]
+- Variáveis de ambiente: [onde estão definidas]
+```
+
+---
+
+### Template de cada `fase-N.md`
+
+```markdown
+# Fase N — [Nome]
+Status: Pendente
+
+---
+
+## ⚠️ Antes de Começar — OBRIGATÓRIO
+
+Ler o `plano-geral.md` antes de qualquer execução.
+Verificar especificamente:
+- Seção "Estado Atual do Projeto" — o que já foi feito e o que ficou definido
+- Seção "Decisões Tomadas" — decisões que afetam esta fase
+- Seção "Onde Estão as Coisas" — localização de serviços, repos, variáveis
+
+Não começar esta fase sem ter lido e entendido o estado atual do projeto.
+
+---
+
+## Contexto Herdado da Fase Anterior
+[Preenchido ao concluir a fase anterior]
+- O que foi feito
+- Decisões que impactam esta fase
+- Estado atual dos sistemas/serviços relevantes
+
+---
+
+## Escopo desta Fase
+- [lista do que entra]
+
+## O que fica de fora
+- [lista explícita do que não entra]
+
+## Tarefas
+- [ ] Tarefa 1
+- [ ] Tarefa 2
+
+## Critério de Conclusão
+- [como saber que a fase está completa]
+
+---
+
+## ⚠️ Após Executar Esta Fase — OBRIGATÓRIO
+
+Este passo não é opcional. Atualizar antes de encerrar a sessão:
+
+**1. Neste arquivo:**
+- Marcar tarefas concluídas (`[ ]` → `[x]`)
+- Registrar o que ficou pendente e por quê
+- Atualizar status no topo: `Status: Concluído — [data]`
+
+**2. No `plano-geral.md` (seção "Estado Atual"):**
+- Atualizar "Última fase concluída" e "Próxima fase"
+- Registrar em "Decisões Tomadas" qualquer divergência do plano original
+- Registrar em "Onde Estão as Coisas" qualquer serviço, URL ou variável nova definida nesta fase
+- Registrar em "Desvios do Plano Original" mudanças de stack, arquitetura ou escopo
+- Preencher o "Contexto Herdado" no arquivo da próxima fase com o resumo do que foi feito aqui
+
+Não avançar para a próxima fase sem atualizar os dois arquivos.
+```
+
+---
+
+## Fase 5 — Parada explícita
+
+Após gerar os arquivos, encerrar com:
+
+> "Mapa gerado e documentação criada em `docs/`. Comece pela Fase 1 — quando terminar, atualize o `fase-1.md` e o `plano-geral.md` antes de avançar. Os Gaps registrados precisam de decisão sua antes de qualquer execução."
+
+Não sugerir próximos passos automáticos. Não chamar outras skills. Parar aqui.
 
 ---
 
@@ -172,8 +325,9 @@ Não sugerir próximos passos automáticos. Não chamar outras skills. Não cria
 - Uma pergunta por vez na fase de descoberta — nunca listar várias de uma vez
 - Nunca executar nada
 - Nunca chamar outras skills automaticamente
-- Nunca salvar arquivos a não ser que o usuário peça explicitamente
+- Gerar a documentação de fases é parte do entregável — não criar outros arquivos além dos documentos de fase e do plano geral
 - Se a ideia for vaga, aprofundar antes de estruturar
 - Marcar explicitamente o que é assumido vs. confirmado
 - Gaps são parte do entregável — não esconder incertezas, não inventar respostas
 - Arquitetura e stack devem ser específicas para o projeto descrito, não genéricas
+- Avaliar complexidade após confirmação — projetos grandes devem ser sinalizados proativamente
